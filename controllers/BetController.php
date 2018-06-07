@@ -13,9 +13,37 @@ use app\models\HsBet;
 use app\models\HsGames;
 use app\models\HsGuessChampion;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 
 class BetController extends BaseController
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'logout' => ['post'],
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
     public function actionGetGameList() {
         $timeStart = Yii::$app->request->post('timeBegin');
         $timeEnd = Yii::$app->request->post('timeEnd');
@@ -27,7 +55,7 @@ class BetController extends BaseController
             ->asArray()
             ->all();
 
-        return ['code' => 0, 'msg' => '操作成功', 'data' => $games];
+        return ['code' => 1, 'message' => '操作成功', 'data' => $games];
     }
 
     public function actionDoBet() {
@@ -37,7 +65,7 @@ class BetController extends BaseController
         $maxBetCount = Yii::$app->params['maxBetCount'];
 
         if (count($bets) > $maxBetCount) {
-            return ['code' => 101, 'msg' => '超过最大投注数'];
+            return ['code' => 0, 'message' => '超过最大投注数'];
         }
 
         foreach ($bets as $bet) {
@@ -50,13 +78,13 @@ class BetController extends BaseController
             }
         }
 
-        return ['code' => 0, 'msg' => '下注成功'];
+        return ['code' => 1, 'message' => '下注成功'];
     }
 
     public function actionGetTeams() {
         $teams = file_get_contents(Yii::getAlias('@app/data/teams.txt'));
         $teams = explode("\n", $teams);
-        return ['code' => 0, 'msg' => '操作成功', 'data' => $teams];
+        return ['code' => 1, 'message' => '操作成功', 'data' => $teams];
     }
 
     public function actionGuessChampion() {
@@ -66,7 +94,7 @@ class BetController extends BaseController
         $teams = explode("\n", $teams);
 
         if (count($guesses) > count($teams)) {
-            return ['code' => 101, 'msg' => '超过最大允许数'];
+            return ['code' => 0, 'message' => '超过最大允许数'];
         }
 
         $res = [];
@@ -83,6 +111,6 @@ class BetController extends BaseController
         $guessChampion->guess = json_encode($res);
         $guessChampion->save();
 
-        return ['code' => 0, 'msg' => '操作成功'];
+        return ['code' => 1, 'message' => '操作成功'];
     }
 }

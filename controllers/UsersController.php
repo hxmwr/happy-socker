@@ -25,15 +25,15 @@ class UsersController extends BaseController
             $identity->userEntity = $user;
             Yii::$app->user->login($identity);
 
-            return ['code' => 0, 'msg' => '登录成功'];
+            return ['code' => 1, 'message' => '登录成功'];
         } else {
-            return ['code' => 101, 'msg' => '登录失败'];
+            return ['code' => 0, 'message' => '登录失败'];
         }
     }
 
     public function actionLogout() {
         Yii::$app->user->logout();
-        return ['code' => 0, 'msg' => '退出成功'];
+        return ['code' => 1, 'message' => '退出成功'];
     }
 
     public function actionRegister() {
@@ -42,11 +42,11 @@ class UsersController extends BaseController
         $uniqueCode = Yii::$app->request->post('uniqueCode');
 
         if (($linkedUser = HsUsers::findOne(['unique_code' => $uniqueCode])) == null) {
-            return ['code' => 102, 'msg' => '无效的邀请码'];
+            return ['code' => 0, 'message' => '无效的邀请码'];
         }
 
         if (HsUsers::findOne(['username' => $username])) {
-            return ['code' => 102, 'msg' => '用户已存在'];
+            return ['code' => 0, 'message' => '用户已存在'];
         }
 
         $user = new HsUsers();
@@ -55,9 +55,9 @@ class UsersController extends BaseController
         $user->linked_user_id = $linkedUser->id;
 
         if ($user->save()) {
-            return ['code' => 0, 'msg' => '注册成功'];
+            return ['code' => 1, 'message' => '注册成功'];
         } else {
-            return ['code' => 103, 'msg' => '注册失败', 'errors' => $user->getErrors()];
+            return ['code' => 0, 'message' => '注册失败', 'errors' => $user->getErrors()];
         }
     }
 }

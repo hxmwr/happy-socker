@@ -38,7 +38,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         $userEntity = HsUsers::findOne($id);
         if ($userEntity) {
             $identity = new static();
-            $identity->$userEntity = $userEntity;
+            $identity->userEntity = $userEntity;
             return $identity;
         } else {
             return null;
