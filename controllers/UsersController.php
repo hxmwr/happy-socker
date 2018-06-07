@@ -16,8 +16,8 @@ use Yii;
 class UsersController extends BaseController
 {
     public function actionLogin() {
-        $username = Yii::$app->request->get('username');
-        $password = Yii::$app->request->get('password');
+        $username = Yii::$app->request->post('username');
+        $password = Yii::$app->request->post('password');
 
         $user = HsUsers::findOne(['username' => $username, 'password' => md5($password)]);
         if ($user) {
@@ -37,16 +37,20 @@ class UsersController extends BaseController
     }
 
     public function actionRegister() {
-        $username = Yii::$app->request->get('username');
-        $password = Yii::$app->request->get('password');
-        $uniqueCode = Yii::$app->request->get('uniqueCode');
+        $username = Yii::$app->request->post('username');
+        $password = Yii::$app->request->post('password');
+        $uniqueCode = Yii::$app->request->post('uniqueCode');
 
         if (($linkedUser = HsUsers::findOne(['unique_code' => $uniqueCode])) == null) {
             return ['code' => 102, 'msg' => '无效的邀请码'];
         }
 
+        if (HsUsers::findOne(['username' => $username])) {
+            return ['code' => 102, 'msg' => '用户已存在'];
+        }
+
         $user = new HsUsers();
-        $user->password = $password;
+        $user->password = md5($password);
         $user->username = $username;
         $user->linked_user_id = $linkedUser->id;
 

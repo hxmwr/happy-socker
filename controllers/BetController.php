@@ -11,6 +11,7 @@ namespace app\controllers;
 
 use app\models\HsBet;
 use app\models\HsGames;
+use app\models\HsGuessChampion;
 use Yii;
 
 class BetController extends BaseController
@@ -52,7 +53,36 @@ class BetController extends BaseController
         return ['code' => 0, 'msg' => '下注成功'];
     }
 
-    public function actionGuessChampion() {
+    public function actionGetTeams() {
+        $teams = file_get_contents(Yii::getAlias('@app/data/teams.txt'));
+        $teams = explode("\n", $teams);
+        return ['code' => 0, 'msg' => '操作成功', 'data' => $teams];
+    }
 
+    public function actionGuessChampion() {
+        $userId = Yii::$app->user->id;
+        $guesses = Yii::$app->request->post('guesses');
+        $teams = file_get_contents(Yii::getAlias('@app/data/teams.txt'));
+        $teams = explode("\n", $teams);
+
+        if (count($guesses) > count($teams)) {
+            return ['code' => 101, 'msg' => '超过最大允许数'];
+        }
+
+        $res = [];
+        foreach ($guesses as $guess) {
+            $bet = intval($guess['bet']);
+            $team = $guess['team'];
+            if (in_array($team, $teams)) {
+                $res[] = ['team' => $team, 'bet' => $bet];
+            }
+        }
+
+        $guessChampion = new HsGuessChampion();
+        $guessChampion->user_id = $userId;
+        $guessChampion->guess = json_encode($res);
+        $guessChampion->save();
+
+        return ['code' => 0, 'msg' => '操作成功'];
     }
 }

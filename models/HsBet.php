@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "hs_bet".
@@ -49,5 +50,10 @@ class HsBet extends \yii\db\ActiveRecord
             'updated_at' => 'Updated At',
             'status' => 'Status',
         ];
+    }
+
+    public function behaviors()
+    {
+        return [TimestampBehavior::class];
     }
 }
