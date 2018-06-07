@@ -11,8 +11,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $accessToken;
 
     private static $users = [
-        '100' => [
-            'id' => '100',
+        'super_admin' => [
+            'id' => 'super_admin',
             'username' => 'admin',
             'password' => 'admin',
             'authKey' => 'test100key',
