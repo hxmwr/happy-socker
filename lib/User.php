@@ -28,12 +28,12 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $session = Yii::$app->getSession();
-        $uid = $session->getHasSessionId() || $session->getIsActive() ? $session->get('__id') : null;
-
-        if ($uid == 'super_admin') {
-            return AdminUser::findIdentity($id);
-        }
+//        $session = Yii::$app->getSession();
+//        $uid = $session->getHasSessionId() || $session->getIsActive() ? $session->get('__id') : null;
+//
+//        if ($uid == 'super_admin') {
+//            return AdminUser::findIdentity($id);
+//        }
 
         $userEntity = HsUsers::findOne($id);
         if ($userEntity) {
@@ -96,5 +96,9 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public function validateAuthKey($authKey)
     {
         return md5($this->userEntity->id . $this->userEntity->password) == $authKey;
+    }
+
+    public function getUsername() {
+        return $this->userEntity->username;
     }
 }

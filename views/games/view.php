@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\HsGames */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => '比赛列表', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => '玩法列表', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="hs-games-view">
@@ -39,6 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'coefficient_on_draw',
             'created_at:datetime',
             'updated_at:datetime',
+            'goals_diff',
+            ['label' => '竞猜类型', 'value' => ['', '', '', '', '', '', ''][$model->type]],
+            ['label' => '过关/单关', 'value' => ['','过关', '单关'][$model->type2]],
+            ['label' => '比分设置', 'value' => $model->result_possibilities],
+            ['label' => '半全场设置', 'value' => $model->half_game],
+            ['label' => '进球数设置', 'value' => $model->goals],
         ],
     ]) ?>
 

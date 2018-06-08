@@ -11,7 +11,7 @@ $this->title = 'My Yii Application';
 
         <p class="lead">Happy Soccer</p>
 
-        <p><a class="btn btn-lg btn-success" href="/games">管理比赛</a></p>
+        <p><a class="btn btn-lg btn-success" href="/games">管理玩法</a></p>
         <p><a class="btn btn-lg btn-success" href="/games/teams">管理球队</a></p>
         <p><a class="btn btn-lg btn-success" href="/hs-users">管理用户</a></p>
         <p><a class="btn btn-lg btn-success" href="/hs-bet">管理下注</a></p>

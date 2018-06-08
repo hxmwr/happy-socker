@@ -15,6 +15,14 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_at
  * @property int $updated_at
  * @property int $status
+ * @property int $type [int(11)]
+ * @property int $goals_a [int(11)]
+ * @property int $goals_b [int(11)]
+ * @property int $type2 [int(11)]
+ * @property string $goals [varchar(1024)]
+ * @property string $half_game [varchar(1024)]
+ * @property string $score [varchar(1024)]
+ * @property int $repeat [int(11)]
  */
 class HsBet extends \yii\db\ActiveRecord
 {
@@ -32,7 +40,10 @@ class HsBet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['game_id', 'choosed_option', 'user_id', 'created_at', 'updated_at', 'status'], 'integer'],
+            [['game_id', 'choosed_option', 'user_id', 'created_at', 'updated_at', 'status', 'goals_a', 'goals_b', 'repeat'], 'integer'],
+            ['goals', 'string', 'max' => 1024],
+            ['half_game', 'string', 'max' => 1024],
+            ['score', 'string', 'max' => 1024],
         ];
     }
 

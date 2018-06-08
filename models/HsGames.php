@@ -20,6 +20,14 @@ use yii\behaviors\TimestampBehavior;
  * @property int $created_at
  * @property int $updated_at
  * @property int $status
+ * @property string $type [varchar(32)]
+ * @property int $goals_a [int(11)]
+ * @property int $goals_b [int(11)]
+ * @property int $goals_diff [int(11)]
+ * @property bool $type2 [tinyint(4)]
+ * @property string $result_possibilities [varchar(1024)]
+ * @property string $half_game [varchar(512)]
+ * @property string $goals [varchar(512)]
  */
 class HsGames extends \yii\db\ActiveRecord
 {
@@ -39,10 +47,12 @@ class HsGames extends \yii\db\ActiveRecord
         return [
             [['time_begin', 'time_end'], 'safe'],
             [['time_begin', 'time_end'], 'required'],
-            [['result', 'created_at', 'updated_at', 'status', 'type'], 'integer'],
+            [['result', 'created_at', 'updated_at', 'status', 'type', 'goals_a', 'goals_b', 'goals_diff', 'type2'], 'integer'],
             [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'number'],
-            [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'required'],
             [['team_a', 'team_b'], 'string', 'max' => 64],
+            [['result_possibilities'], 'string', 'max' => 1024],
+            [['half_game'], 'string', 'max' => 512],
+            [['goals'], 'string', 'max' => 512],
         ];
     }
 
@@ -64,7 +74,12 @@ class HsGames extends \yii\db\ActiveRecord
             'created_at' => '创建日期',
             'updated_at' => '更新日期',
             'status' => '状态',
-            'type' => '赛事'
+            'type' => '竞猜类型',
+            'type2' => '过关/单关',
+            'result_possibilities' => '比分设置',
+            'goals' => '进球数设置',
+            'half_game' => '半全场设置',
+            'goals_diff' => '让球数'
         ];
     }
 

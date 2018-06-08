@@ -9,4 +9,12 @@ require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
 $config = require __DIR__ . '/../config/web.php';
 
+$uri = $_SERVER['REQUEST_URI'];
+
+if (preg_match("/^\/(users|bet)(.+)$/", $uri)) {
+    $config['components']['user']['identityClass'] = 'app\lib\User';
+} else {
+    $config['components']['user']['identityClass'] = 'app\models\User';
+}
+
 (new yii\web\Application($config))->run();

@@ -38,7 +38,7 @@ class HsUsers extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'created_at', 'updated_at', 'type', 'exp', 'gender', 'linked_user_id'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'type', 'exp', 'gender', 'linked_user_id', 'coins'], 'integer'],
             [['username', 'password'], 'string', 'max' => 32],
             [['mobile'], 'string', 'max' => 11],
             [['email'], 'string', 'max' => 64],
