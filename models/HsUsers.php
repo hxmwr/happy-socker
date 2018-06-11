@@ -21,6 +21,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int $exp
  * @property int $gender
  * @property int $linked_user_id
+ * @property int $coins [int(11)]
  */
 class HsUsers extends \yii\db\ActiveRecord
 {

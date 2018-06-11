@@ -28,6 +28,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $result_possibilities [varchar(1024)]
  * @property string $half_game [varchar(512)]
  * @property string $goals [varchar(512)]
+ * @property string $league_type [varchar(32)]
  */
 class HsGames extends \yii\db\ActiveRecord
 {
@@ -50,9 +51,11 @@ class HsGames extends \yii\db\ActiveRecord
             [['result', 'created_at', 'updated_at', 'status', 'type', 'goals_a', 'goals_b', 'goals_diff', 'type2'], 'integer'],
             [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'number'],
             [['team_a', 'team_b'], 'string', 'max' => 64],
+            [['team_a', 'team_b'], 'required'],
             [['result_possibilities'], 'string', 'max' => 1024],
             [['half_game'], 'string', 'max' => 512],
             [['goals'], 'string', 'max' => 512],
+            [['league_type'], 'string', 'max' => 32],
         ];
     }
 
@@ -79,7 +82,8 @@ class HsGames extends \yii\db\ActiveRecord
             'result_possibilities' => '比分设置',
             'goals' => '进球数设置',
             'half_game' => '半全场设置',
-            'goals_diff' => '让球数'
+            'goals_diff' => '让球数',
+            'league_type' => '赛事'
         ];
     }
 

@@ -111,6 +111,9 @@ class GamesController extends BaseAdminController
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -135,12 +138,14 @@ class GamesController extends BaseAdminController
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionTeams() {
+    public function actionTeams()
+    {
         $teams = file_get_contents(Yii::getAlias('@app/data/teams.txt'));
         return $this->render('teams', ['teams' => $teams]);
     }
 
-    public function actionSaveTeams() {
+    public function actionSaveTeams()
+    {
         $teams = Yii::$app->request->post('teams');
 
         $teams = trim($teams);

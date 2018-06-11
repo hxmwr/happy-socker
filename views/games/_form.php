@@ -21,8 +21,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'time_end')->textInput(['placeholder' => 'e.g. 2018-06-07 22:00:00']) ?>
 
-    <?= $form->field($model, 'result')->textInput() ?>
-
     <?= $form->field($model, 'goals_diff')->dropDownList([
             '1' => '-4',
             '2' => '-3.5',
@@ -54,6 +52,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'goals')->textarea(['maxlength' => true, 'rows' => 5]) ?>
 
     <?= $form->field($model, 'half_game')->textarea(['maxlength' => true, 'rows' => 5]) ?>
+
+    <?= $form->field($model, 'league_type')->dropDownList(['世界杯' => '世界杯']) ?>
 
     <?= $form->field($model, 'type')->dropDownList(['1' => '胜平负', '2' => '让球胜平负', '3' => '半全场', '4' => '猜比分', '5' => '进球数']) ?>
 
