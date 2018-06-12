@@ -60,4 +60,8 @@ class UsersController extends BaseController
             return ['code' => 0, 'message' => '注册失败', 'errors' => $user->getErrors()];
         }
     }
+
+    public function actionStatus() {
+        return ['code' => Yii::$app->user->isGuest?0:1];
+    }
 }
