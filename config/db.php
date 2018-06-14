@@ -14,7 +14,7 @@ return YII_DEBUG?[
 ]:[
     'class' => 'yii\db\Connection',
     'dsn' => 'mysql:host=127.0.0.1;dbname=jinsifang_com',
-    'username' => 'jinsifang_com',
-    'password' => 'r8wjMc7SPKrrb2hX',
+    'username' => 'jinspang_com',
+    'password' => '7zK5KTL6aWzyxweK',
     'charset' => 'utf8',
 ];

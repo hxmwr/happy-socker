@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\ResultSetting;
+use app\models\Settings;
 use Yii;
 use app\models\HsGames;
 use yii\data\ActiveDataProvider;
@@ -164,5 +166,40 @@ class GamesController extends BaseAdminController
         file_put_contents(Yii::getAlias('@app/data/teams.txt'), $teams);
         Yii::$app->session->setFlash('info', '保存成功');
         return $this->redirect('/games/teams');
+    }
+
+    public function actionSettings() {
+        $model = new Settings();
+        if (Yii::$app->request->getIsPost()) {
+            Yii::$app->session->setFlash('info', '保存成功');
+            $model->load(Yii::$app->request->post());
+            $model->save();
+        }
+
+        return $this->render('settings', ['model' => $model]);
+    }
+
+    public function actionSetResult() {
+        $model = new ResultSetting();
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            $res = explode("\n", $model->setting);
+            $teams = explode('VS', $res[0]);
+            $games = HsGames::find()->where(['team_a' => trim($teams[0]), 'team_b' => trim($teams[1])])->all();
+            foreach ($games as $game) {
+                $scores = explode(',', $res[2]);
+                if (trim($res[1]) == '半场') {
+                    $game->h_goals_a = intval($scores[0]);
+                    $game->h_goals_b = intval($scores[1]);
+                } else {
+                    $game->goals_a = intval($scores[0]);
+                    $game->goals_b = intval($scores[1]);
+                }
+                $game->save();
+            }
+        }
+        $model->setting = '';
+        return $this->render('set-result', ['model'=> $model]);
     }
 }

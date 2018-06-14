@@ -29,6 +29,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $half_game [varchar(512)]
  * @property string $goals [varchar(512)]
  * @property string $league_type [varchar(32)]
+ * @property int $h_goals_a [int(11)]
+ * @property int $h_goals_b [int(11)]
  */
 class HsGames extends \yii\db\ActiveRecord
 {
@@ -48,7 +50,7 @@ class HsGames extends \yii\db\ActiveRecord
         return [
             [['time_begin', 'time_end'], 'safe'],
             [['time_begin', 'time_end'], 'required'],
-            [['result', 'created_at', 'updated_at', 'status', 'type', 'goals_a', 'goals_b', 'goals_diff', 'type2'], 'integer'],
+            [['result', 'created_at', 'updated_at', 'status', 'type', 'goals_a', 'goals_b', 'h_goals_a', 'h_goals_b', 'goals_diff', 'type2'], 'integer'],
             [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'number'],
             [['team_a', 'team_b'], 'string', 'max' => 64],
             [['team_a', 'team_b'], 'required'],
@@ -68,6 +70,10 @@ class HsGames extends \yii\db\ActiveRecord
             'id' => 'ID',
             'team_a' => '主队',
             'team_b' => '客队',
+            'goals_a' => '主队进球数',
+            'h_goals_a' => '半场主队进球数',
+            'h_goals_b' => '半场客队进球数',
+            'goals_b' => '客队进球数',
             'time_begin' => '起始时间',
             'time_end' => '截止时间',
             'result' => '比赛结果',

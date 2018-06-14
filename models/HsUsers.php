@@ -44,6 +44,7 @@ class HsUsers extends \yii\db\ActiveRecord
             [['mobile'], 'string', 'max' => 11],
             [['email'], 'string', 'max' => 64],
             [['unique_code'], 'string', 'max' => 16],
+            ['username', 'unique']
         ];
     }
 
@@ -65,7 +66,8 @@ class HsUsers extends \yii\db\ActiveRecord
             'type' => '类型',
             'exp' => 'Exp',
             'gender' => '性别',
-            'linked_user_id' => '邀请人ID'
+            'linked_user_id' => '邀请人ID',
+            'coins' => '余额'
         ];
     }
 

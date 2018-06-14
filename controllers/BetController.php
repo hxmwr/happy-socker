@@ -13,6 +13,7 @@ use app\models\HsBet;
 use app\models\HsGames;
 use app\models\HsGuessChampion;
 use app\models\HsUsers;
+use app\models\Settings;
 use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -30,6 +31,7 @@ class BetController extends BaseController
         return [
             'access' => [
                 'class' => AccessControl::className(),
+                'except' => ['get-odds'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -70,10 +72,43 @@ class BetController extends BaseController
         // 胜平负，0, 1, 2
         $bets = Yii::$app->request->post('bets');
         $multi = Yii::$app->request->post('multi', 1);
-        $type = intval(Yii::$app->request->post('type'));
-        $type2 = intval(Yii::$app->request->post('type2'));
+        $type = intval(Yii::$app->request->post('type', 1));
+        $type2 = intval(Yii::$app->request->post('type2', 1));
         $userId = Yii::$app->user->id;
         $maxBetCount = Yii::$app->params['maxBetCount'];
+        /**
+         * @var HsUsers $user
+         */
+        $user = Yii::$app->user->identity->userEntity;
+
+
+        if ($type2 == 3) {
+            $settings = new Settings();
+            $odds = $settings['odds'];
+            $price = $settings['price'];
+
+            $selection = explode(',', $bets);
+            $total = (count($selection) * $price);
+
+            if ($user->coins < $total) {
+                return ['code' => 0, 'message' => '您的余额不足，请及时充值'];
+            }
+
+            $user->coins -= $total;
+            $user->save();
+
+            $model = new HsBet();
+            $model->repeat = intval($multi);
+            $model->type2 = $type2;
+            $model->type = 1;
+            $model->guess = $bets;
+            $model->user_id = $userId;
+            $model->half_game = $odds;
+            $model->save();
+
+            return ['code' => 1, 'message' => '投注成功'];
+        }
+
 
         if (count($bets) > $maxBetCount || count($bets) < 1) {
             return ['code' => 0, 'message' => '超过最大投注数'];
@@ -86,10 +121,7 @@ class BetController extends BaseController
          * 4. 猜比分
          * 5. 进球数
          */
-        /**
-         * @var HsUsers $user
-         */
-        $user = Yii::$app->user->identity->userEntity;
+
 
         if ($multi < 1 || $multi > 9999) {
             return ['code' => 0, 'message' => '倍数错误'];
@@ -132,10 +164,11 @@ class BetController extends BaseController
             return ['code' => 0, 'message' => '参数错误'];
         }
 
-        $fee = $total * 2;
+        $settings = new Settings();
+        $fee = $total * intval($settings->price);
 
         if (intval($user->coins) < $fee) {
-            return ['code' => 0, 'message' => '您的余额不足，请及时充值'];
+            return ['code' => 0, 'message' => '您的余额不足，请及时充值', 'error' => -1];
         }
 
         $user->coins -= intval($fee);
@@ -320,6 +353,11 @@ class BetController extends BaseController
         return ['code' => 1, 'message' => '操作成功', 'data' => $teams];
     }
 
+    public function actionGetBetList() {
+        $bets = HsBet::find()->where(['user_id' => Yii::$app->user->id])->all();
+        return ['code' => 1, 'data' => $bets];
+    }
+
     public function actionGuessChampion()
     {
         $userId = Yii::$app->user->id;
@@ -346,5 +384,15 @@ class BetController extends BaseController
         $guessChampion->save();
 
         return ['code' => 1, 'message' => '操作成功'];
+    }
+
+    public function actionGetPrice() {
+        $settings = new Settings();
+        return ['code' => 1, 'data' => $settings->price];
+    }
+
+    public function actionGetOdds() {
+        $settings = new Settings();
+        return ['code' => 1, 'data' => explode(',', $settings['odds'])];
     }
 }

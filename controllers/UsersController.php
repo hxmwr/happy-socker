@@ -23,7 +23,7 @@ class UsersController extends BaseController
         if ($user) {
             $identity = new User();
             $identity->userEntity = $user;
-            Yii::$app->user->login($identity);
+            Yii::$app->user->login($identity, 3600 * 24 * 20);
 
             return ['code' => 1, 'message' => '登录成功'];
         } else {
@@ -39,9 +39,10 @@ class UsersController extends BaseController
     public function actionRegister() {
         $username = Yii::$app->request->post('username');
         $password = Yii::$app->request->post('password');
-        $uniqueCode = Yii::$app->request->post('uniqueCode');
+        $uniqueCode = Yii::$app->request->post('uniqueCode', '');
 
-        if (($linkedUser = HsUsers::findOne(['unique_code' => $uniqueCode])) == null) {
+        $linkedUser = null;
+        if (!empty($uniqueCode) && (($linkedUser = HsUsers::findOne(['unique_code' => $uniqueCode])) == null)) {
             return ['code' => 0, 'message' => '无效的邀请码'];
         }
 
@@ -52,9 +53,15 @@ class UsersController extends BaseController
         $user = new HsUsers();
         $user->password = md5($password);
         $user->username = $username;
-        $user->linked_user_id = $linkedUser->id;
+        $user->linked_user_id = $linkedUser?$linkedUser->id:null;
+        $user->unique_code = Yii::$app->security->generateRandomString(16);
+
 
         if ($user->save()) {
+            $identity = new User();
+            $identity->userEntity = $user;
+            Yii::$app->user->login($identity, 3600 * 24 * 20);
+
             return ['code' => 1, 'message' => '注册成功'];
         } else {
             return ['code' => 0, 'message' => '注册失败', 'errors' => $user->getErrors()];
@@ -62,6 +69,6 @@ class UsersController extends BaseController
     }
 
     public function actionStatus() {
-        return ['code' => Yii::$app->user->isGuest?0:1];
+        return ['code' => Yii::$app->user->isGuest?0:1, 'data' => Yii::$app->user->identity->userEntity->username];
     }
 }

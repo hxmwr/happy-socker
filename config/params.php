@@ -2,5 +2,5 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-    'maxBetCount' => 12
+    'maxBetCount' => 10000000
 ];

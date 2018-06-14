@@ -11,6 +11,12 @@ use yii\widgets\ActiveForm;
 
 <div class="hs-games-form">
 
+    <div>
+        <div>比分设置事例：1:1#2.3,2:3#2.32,5:5#2.38 第一行设置胜，第二行设置平，第三行设置负</div>
+        <div>进球数设置: 4.3,5.5,7.7,8.3 以此类推次序代表总进球数</div>
+        <div>进球数设置: 4.3,5.5,7.7,8.3 以此类推次序代表总进球数</div>
+        <div>半全场设置: 4.3,5.5,7.7,8.3 以此类推次序各种胜负可能</div>
+    </div>
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'team_a')->textInput(['maxlength' => true]) ?>
