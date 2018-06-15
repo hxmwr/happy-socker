@@ -61,6 +61,7 @@ class BetController extends BaseController
             ->where(['status' => 1, 'type' => $type, 'type2' => $type2, 'league_type' => $leagueType])
             ->andWhere(['<', 'time_begin', $timeEnd])
             ->andWhere(['>', 'time_end', $timeBegin])
+            ->orderBy('time_end asc')
             ->asArray()
             ->all();
 
@@ -151,13 +152,13 @@ class BetController extends BaseController
             foreach ($res as $v) {
                 $cnt = $cnt * count($v);
             }
-            $total = $cnt * 2;
+            $total = $cnt;
         } else if ($type2 == 2) {
             $cnt = 0;
             foreach ($res as $v) {
                 $cnt += count($v);
             }
-            $total = $cnt * 2;
+            $total = $cnt;
         }
 
         if (!$cnt) {
@@ -165,7 +166,7 @@ class BetController extends BaseController
         }
 
         $settings = new Settings();
-        $fee = $total * intval($settings->price);
+        $fee = $total * intval($settings->price) * intval($multi);
 
         if (intval($user->coins) < $fee) {
             return ['code' => 0, 'message' => '您的余额不足，请及时充值', 'error' => -1];
@@ -358,6 +359,55 @@ class BetController extends BaseController
         return ['code' => 1, 'data' => $bets];
     }
 
+
+
+    public function actionGetBetDetail() {
+        $id = Yii::$app->request->post('id');
+        $bet = HsBet::findOne($id);
+        $type = $bet->type;
+
+        if ($bet->type2 == 1 || $bet->type2 == 2) {
+            $bets = json_decode($bet->guess, true);
+            $games = [];
+            foreach ($bets as $gameId => $bet) {
+                $game = HsGames::findOne(intval($gameId));
+                $selection = explode(',', $bet);
+                if ($type == 1) { // 胜平负
+                    $parsedSelection = [];
+                    foreach ($selection as $sel) {
+                        $parsedSelection[] = ['胜', '平', '负'][intval($sel)] . "(" . [$game->coefficient_on_win, $game->coefficient_on_draw, $game->coefficient_on_lost][intval($sel)] . ")";
+                    }
+                    $games[] = [
+                        'selection' => $parsedSelection,
+                        'team_a' => $game->team_a,
+                        'team_b' => $game->team_b
+                    ];
+                } elseif ($type == 2) { // 让球胜平负
+                    $parsedSelection = [];
+                    foreach ($selection as $sel) {
+                        $parsedSelection[] = ['胜', '平', '负'][intval($sel)] . "(" . [$game->coefficient_on_win, $game->coefficient_on_draw, $game->coefficient_on_lost][intval($sel)] . ")";
+                    }
+                    $games[] = [
+                        'selection' => $parsedSelection,
+                        'team_a' => $game->team_a,
+                        'team_b' => $game->team_b
+                    ];
+                } elseif ($type == 3) { // 半全场
+                    $parsedSelection = [];
+                    foreach ($selection as $sel) {
+                        $parsedSelection[] = ['', '', '', '', '', ''][intval($sel)];
+                    }
+                } elseif ($type == 4) { // 猜比分
+
+                } elseif ($type == 5) { // 进球数
+
+                }
+            }
+        } elseif ($bet->type2 == 3) {
+
+        }
+    }
+
     public function actionGuessChampion()
     {
         $userId = Yii::$app->user->id;
@@ -394,5 +444,10 @@ class BetController extends BaseController
     public function actionGetOdds() {
         $settings = new Settings();
         return ['code' => 1, 'data' => explode(',', $settings['odds'])];
+    }
+
+    public function actionGetUserCoins() {
+        $user = Yii::$app->user->identity->userEntity;
+        return ['code' => 1, 'data' => intval($user->coins), 'unicode' => $user->unique_code];
     }
 }

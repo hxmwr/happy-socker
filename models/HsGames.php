@@ -51,7 +51,7 @@ class HsGames extends \yii\db\ActiveRecord
             [['time_begin', 'time_end'], 'safe'],
             [['time_begin', 'time_end'], 'required'],
             [['result', 'created_at', 'updated_at', 'status', 'type', 'goals_a', 'goals_b', 'h_goals_a', 'h_goals_b', 'goals_diff', 'type2'], 'integer'],
-            [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'number'],
+            [['coefficient_on_win', 'coefficient_on_lost', 'coefficient_on_draw'], 'string'],
             [['team_a', 'team_b'], 'string', 'max' => 64],
             [['team_a', 'team_b'], 'required'],
             [['result_possibilities'], 'string', 'max' => 1024],
