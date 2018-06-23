@@ -189,13 +189,11 @@ class GamesController extends BaseAdminController
             $games = HsGames::find()->where(['team_a' => trim($teams[0]), 'team_b' => trim($teams[1])])->all();
             foreach ($games as $game) {
                 $scores = explode(',', $res[2]);
-                if (trim($res[1]) == '半场') {
-                    $game->h_goals_a = intval($scores[0]);
-                    $game->h_goals_b = intval($scores[1]);
-                } else {
-                    $game->goals_a = intval($scores[0]);
-                    $game->goals_b = intval($scores[1]);
-                }
+                $game->h_goals_a = intval($scores[0]);
+                $game->h_goals_b = intval($scores[1]);
+                $scores = explode(',', $res[1]);
+                $game->goals_a = intval($scores[0]);
+                $game->goals_b = intval($scores[1]);
                 $game->save();
             }
         }

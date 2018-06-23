@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <p>
 示例:<br/>
     俄罗斯VS沙特<BR />
-    半场<BR />
+    3:3<BR />
     5:2<BR />
 </p>
 

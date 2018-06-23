@@ -24,6 +24,8 @@ use yii\behaviors\TimestampBehavior;
  * @property string $score [varchar(1024)]
  * @property int $repeat [int(11)]
  * @property string $guess [varchar(1024)]
+ * @property string $odds [varchar(512)]
+ * @property string $fee [varchar(32)]
  */
 class HsBet extends \yii\db\ActiveRecord
 {
@@ -46,6 +48,8 @@ class HsBet extends \yii\db\ActiveRecord
             ['half_game', 'string', 'max' => 1024],
             ['score', 'string', 'max' => 1024],
             ['guess', 'string', 'max' => 1024],
+            ['odds', 'string', 'max' => 512],
+            ['fee', 'string', 'max' => 32],
         ];
     }
 
